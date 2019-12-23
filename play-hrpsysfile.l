@@ -88,6 +88,7 @@
   )
 
 (defun is-choreonoid ()
+  ;; (if (and (is-simulation) (substringp "choreonoid" (read-line (piped-fork "rtls localhost:15005/ -l |grep RobotHardware")))) t nil))
   (and (is-simulation) (> (read-from-string (read-line (piped-fork "rtls localhost:15005/ -l |grep HEAD | wc -l"))) 0))
   )
 
@@ -525,7 +526,9 @@
      (format wf "0");; time
      (dotimes (i 6) (format wf " ~s" (elt rwrench i)))
      (dotimes (i 6) (format wf " ~s" (elt lwrench i)))
-     (format wf " 0 0 0 0 0 0  0 0 0 0 0 0~%")
+     ;; (format wf " 0 0 0 0 0 0  0 0 0 0 0 0~%")
+     (dotimes (i (- (length contact-state-list) 2)) (format wf "  0 0 0 0 0 0"))
+     (format wf "~%")
      )
 
     ;; optionalfile作成
@@ -534,7 +537,9 @@
      ;; (format of "0.0 1 1 0 0 5 5 5 5~%")
      (format of "0.0")
      (mapc #'(lambda (contact-state) (format of " ~s" contact-state)) contact-state-list)
-     (format of " 5 5 5 5~%")
+     ;; (format of " 5 5 5 5~%")
+     (mapc #'(lambda (contact-state) (format of " 5")) contact-state-list)
+     (format of "~%")
      )
 
     (exec-copy "/tmp/" "set-current-pose")
