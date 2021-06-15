@@ -36,6 +36,7 @@
 
 ;; 実機かシミュレーションか判定
 (defun is-simulation ()
+;  nil)
   (if (ros::get-param "use_sim_time" nil) t nil))
 
 (defun is-choreonoid ()
